@@ -38,9 +38,9 @@ const Overview = () => {
     const [ selectedItems, setSelectedItems ] = useState([])
     const ticketInterface = tickets && Object.keys(tickets[0])
 	const searchParams = useSelector(selectSearchParams)
-    const [ ticketsToDisplay, setTicketsToDisplay ] = useState()
+    const [ ticketsToDisplay, setTicketsToDisplay ] = useState([])
 
-    const getSelectedHahdler = (val) => {
+    const getSelectedHahdler = val => {
         val.add 
             ? setSelectedItems(prev => !prev.includes(val.id) ? [...prev, val.id] : prev)
             : setSelectedItems(prev => prev.filter((el) => val.id !== el))
@@ -116,12 +116,12 @@ const Overview = () => {
                         </DialogTrigger>
                     </ActionBlock>
                 }
-                <Search defaultSelectedKey={3} styles={{marginRight: sltylingValues.searchElementsSpacing}} />
+                <Search defaultSelectedKey={3} />
                 <TopButtons />
             </Flex>
             { loading 
                 ? <MainLoader /> 
-                : ticketsToDisplay?.length 
+                : ticketsToDisplay.length 
                     ? <Table
                         tickets={ticketsToDisplay} 
                         selectedItems={selectedItems} 

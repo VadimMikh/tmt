@@ -3,6 +3,7 @@ import { Checkbox, Flex } from '@adobe/react-spectrum'
 import ChevronDown from '@spectrum-icons/workflow/ChevronDown'
 import { v4 } from 'uuid'
 import styles from './Table.module.css'
+import classNames from 'classnames'
 
 const Table = props => {
     const [ descItem, setDescItem ] = useState()
@@ -15,7 +16,7 @@ const Table = props => {
         sort = null 
     } = props
 
-    const ticketsToRender = isSelectable ? tickets.map(el => ({checked: false, ...el})) : tickets
+    const ticketsToRender = isSelectable ? tickets.map(el => ({ checked: false, ...el })) : tickets
 
     const sortingHandler = (name) => {
         typeof sort === 'function' && sort(name, descItem === name)
@@ -33,11 +34,7 @@ const Table = props => {
                                 onClick={() => sortingHandler(name)}
                                 className={styles.tableHeadCell}>
                                 <Flex alignItems="center" justifyContent="space-between">
-                                    {
-                                        name !== 'checked' 
-                                            ? <> {name} <ChevronDown UNSAFE_className={`${descItem === name ? styles.sorted : ''}`} aria-label="Locked" size="XS" /> </>
-                                            : ''
-                                    }
+                                    { name !== 'checked' && <> {name} <ChevronDown UNSAFE_className={classNames({ [styles.sorted]: descItem === name })} aria-label="Locked" size="XS" /> </> }
                                 </Flex>
                             </th>
                         )
@@ -54,16 +51,16 @@ const Table = props => {
                                     if (isSelectable && key === 'checked') {
                                         return <td 
                                             width="20" 
-                                            className={`${styles.tableCell} ${styles.tableCellAlignCenter}`} key={v4()}>
+                                            className={classNames(styles.tableCell, styles.tableCellAlignCenter)} key={v4()}>
                                                 <Checkbox 
                                                     UNSAFE_style={{"paddingRight": "0"}}
                                                     isSelected={selectedItems.includes(item.id)}
-                                                    onChange={(state) => typeof getSelected === 'function' && getSelected({id: item.id, add: state})} /> 
+                                                    onChange={state => typeof getSelected === 'function' && getSelected({ id: item.id, add: state })} /> 
                                             </td> 
                                     } else {
                                         return <td 
-                                            className={`${styles.tableCell} ${centerAligned.includes(i + 1) && styles.tableCellAlignCenter}`} key={v4()}>
-                                            { value === '[object Object]' ? <pre>JSON.stringify(item[key], null, 2)</pre> : value }
+                                            className={classNames(styles.tableCell, { [styles.tableCellAlignCenter]: centerAligned.includes(i + 1) })} key={v4()}>
+                                            { value.toString() === '[object Object]' ? <pre>JSON.stringify(item[key], null, 2)</pre> : value }
                                         </td>
                                     } 
                                 }) 
