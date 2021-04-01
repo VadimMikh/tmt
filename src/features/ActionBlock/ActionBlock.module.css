@@ -1,0 +1,4 @@
+.container {
+    background-color: var(--tmt-color-bg-main);
+    z-index: 2;
+}

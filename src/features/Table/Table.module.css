@@ -1,0 +1,33 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid var(--tmt-color-border-main);
+}
+
+.tableCell,
+.tableHeadCell {
+    padding: 5px 15px;
+    border-left: 1px solid var(--tmt-color-border-main);
+}
+
+.tableHeadCell {
+    background-color: var(--tmt-color-card);
+    text-align: left;
+    cursor: pointer;
+}
+
+.tableCell:nth-child(1) {
+    border-left: none;
+}
+
+.tableRow:nth-child(odd) {
+    background-color: var(--tmt-color-bg-card);
+}
+
+.tableCellAlignCenter {
+    text-align: center;
+}
+
+.sorted {
+    transform: rotate(-180deg);
+}
