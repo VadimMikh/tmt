@@ -20,7 +20,7 @@ const Root = () => {
         let currentTicket
         
         if (!isNaN(IDMarker)) {
-            currentTicket = tickets?.filter(el => el.id === IDMarker)
+            currentTicket = tickets?.filter((el: {id: number}) => el.id === IDMarker)
         }
         
         locationArray.map((el, i) => {

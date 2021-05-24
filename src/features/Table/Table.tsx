@@ -4,9 +4,19 @@ import ChevronDown from '@spectrum-icons/workflow/ChevronDown'
 import { v4 } from 'uuid'
 import styles from './Table.module.css'
 import classNames from 'classnames'
+import { IItem } from '../../interfaces/items'
 
-const Table = props => {
-    const [ descItem, setDescItem ] = useState()
+type TableProps = {
+    tickets: IItem[],
+    isSelectable: boolean,
+    selectedItems: number[],
+    centerAligned?: number[],
+    getSelected: Function,
+    sort: Function
+}
+
+const Table = (props: TableProps) => {
+    const [ descItem, setDescItem ] = useState<string>()
     const { 
         tickets,
         isSelectable,
@@ -18,7 +28,7 @@ const Table = props => {
 
     const ticketsToRender = isSelectable ? tickets.map(el => ({ checked: false, ...el })) : tickets
 
-    const sortingHandler = (name) => {
+    const sortingHandler = (name: string) => {
         typeof sort === 'function' && sort(name, descItem === name)
         setDescItem(descItem === name ? undefined : name)
     }
@@ -28,13 +38,13 @@ const Table = props => {
             <thead>
                 <tr>
                     {
-                        Object.keys(ticketsToRender[0]).map(name => 
+                        Object.keys(ticketsToRender[0]).map((name: string) => 
                             <th 
                                 key={name}
                                 onClick={() => sortingHandler(name)}
                                 className={styles.tableHeadCell}>
                                 <Flex alignItems="center" justifyContent="space-between">
-                                    { name !== 'checked' && <> {name} <ChevronDown UNSAFE_className={classNames({ [styles.sorted]: descItem === name })} aria-label="Locked" size="XS" /> </> }
+                                    { name !== 'checked' ? <> {name} <ChevronDown UNSAFE_className={classNames({ [styles.sorted]: descItem === name })} aria-label="Locked" size="XS" /> </> : <></>}
                                 </Flex>
                             </th>
                         )
@@ -46,8 +56,9 @@ const Table = props => {
                     ticketsToRender.map((item, j) => (
                         <tr className={styles.tableRow} key={v4()}>
                             {   
-                                Object.keys(item).map((key, i) => {
-                                    let value = item[key].toString()
+                                Object.keys(item).map((key: string, i) => {
+                                    let value = item[key as keyof IItem]
+
                                     if (isSelectable && key === 'checked') {
                                         return <td 
                                             width="20" 
@@ -58,10 +69,12 @@ const Table = props => {
                                                     onChange={state => typeof getSelected === 'function' && getSelected({ id: item.id, add: state })} /> 
                                             </td> 
                                     } else {
-                                        return <td 
-                                            className={classNames(styles.tableCell, { [styles.tableCellAlignCenter]: centerAligned.includes(i + 1) })} key={v4()}>
-                                            { value.toString() === '[object Object]' ? <pre>JSON.stringify(item[key], null, 2)</pre> : value }
-                                        </td>
+                                        return (
+                                            <td 
+                                                className={classNames(styles.tableCell, { [styles.tableCellAlignCenter]: centerAligned.includes(i + 1) })} key={v4()}>
+                                                { value.toString() }
+                                            </td>
+                                        )
                                     } 
                                 }) 
                             }

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { Link as RouterLink } from "react-router-dom"
 import { 
     Flex,
@@ -30,27 +29,34 @@ import TopButtons from '../TopButtons/TopButtons'
 import { sortArray } from '../../app/utils'
 import sltylingValues from '../../app/sltylingValues'
 import { default as AppStyles } from '../../App.module.css'
+import { IItem } from '../../interfaces/items'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
+
+interface ISelected {
+    id: number,
+    add: boolean
+}
 
 const Overview = () => {
-	const dispatch = useDispatch()
-	const tickets = useSelector(selectTickets)
-	const loading = useSelector(selectTicketsLoadingState)
-    const [ selectedItems, setSelectedItems ] = useState([])
-    const ticketInterface = tickets && Object.keys(tickets[0])
-	const searchParams = useSelector(selectSearchParams)
-    const [ ticketsToDisplay, setTicketsToDisplay ] = useState([])
+	const dispatch = useAppDispatch()
+	const tickets = useAppSelector<IItem[]>(selectTickets)
+	const loading = useAppSelector(selectTicketsLoadingState)
+	const searchParams = useAppSelector(selectSearchParams)
+    const [ selectedItems, setSelectedItems ] = useState<number[]>([])
+    const ticketInterface = tickets.length ? Object.keys(tickets[0]) : []
+    const [ ticketsToDisplay, setTicketsToDisplay ] = useState<IItem[]>([])
 
-    const getSelectedHahdler = val => {
+    const getSelectedHahdler = (val: ISelected) => {
         val.add 
-            ? setSelectedItems(prev => !prev.includes(val.id) ? [...prev, val.id] : prev)
-            : setSelectedItems(prev => prev.filter((el) => val.id !== el))
+            ? setSelectedItems((prev) => !prev.includes(val.id) ? [...prev, val.id] : prev)
+            : setSelectedItems((prev) => prev.filter((el) => val.id !== el))
     }
 
-    const sortHandler = (val, desc) => {
+    const sortHandler = (val: string, desc: boolean) => {
         setTicketsToDisplay(sortArray(ticketsToDisplay, val, desc))
     }
 
-    const inquiryHandler = close => {
+    const inquiryHandler = (close: Function) => {
         close()
     }
 
@@ -59,28 +65,31 @@ const Overview = () => {
     }
 
     useEffect(() => {
-        if (tickets && searchParams.searchBy) {
-            setTicketsToDisplay(tickets.filter(el => {
+        if (tickets.length && searchParams.searchBy) {
+            setTicketsToDisplay(tickets.filter((el: any) => {
                 return el[ticketInterface[searchParams.searchBy - 1]].toString().indexOf(searchParams.text) !== -1
             }))
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams])
 
     useEffect(() => {
         setTicketsToDisplay(tickets)
         ticketInterface && dispatch(updateTicketInterface(ticketInterface))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tickets])
     
     useEffect(() => {
         dispatch(getTicketList())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
 	return (
         <>
             <Flex marginBottom={sltylingValues.mainBottomSpacing} justifyContent="end" alignItems="end" position="relative">
-                { !!selectedItems.length &&
+                { !!selectedItems.length ?
                     <ActionBlock resetHandler={resetSeletion} selectedItems={selectedItems}>
-                        { selectedItems.length === 1 && 
+                        { selectedItems.length === 1 ?
                             <ActionButton 
                                 isQuiet 
                                 marginEnd={sltylingValues.searchElementsSpacing}>
@@ -89,7 +98,7 @@ const Overview = () => {
                                         Manage Event Ticket Data
                                     </RouterLink>
                                 </Link>
-                            </ActionButton> 
+                            </ActionButton> : <></>
                         }
                         <DialogTrigger>
                             <ActionButton isQuiet><Link UNSAFE_className={AppStyles.colorGreen}>Start Need Inquiry</Link></ActionButton>
@@ -98,9 +107,11 @@ const Overview = () => {
                                 <Heading>Start Need Inquiry</Heading>
                                 <Divider />
                                 <Content>
-                                    <p>{ `You are going to start inquiry for ${selectedItems.length} ${selectedItems.length > 1 ? 'Events' : 'Event'}:` }</p>
+                                    <p>
+                                        { `You are going to start inquiry for ${selectedItems.length} ${selectedItems.length > 1 ? 'Events' : 'Event'}:` }
+                                    </p>
                                     {
-                                        selectedItems?.map(el => <p key={v4()}><b>{ tickets[el].title }</b></p>)
+                                        selectedItems?.map((el) => <p key={v4()}><b>{ tickets[el].title }</b></p>)
                                     }
                                 </Content>
                                 <ButtonGroup>
@@ -114,7 +125,7 @@ const Overview = () => {
                                 </Dialog>
                             )}
                         </DialogTrigger>
-                    </ActionBlock>
+                    </ActionBlock> : <></>
                 }
                 <Search defaultSelectedKey={3} />
                 <TopButtons />
