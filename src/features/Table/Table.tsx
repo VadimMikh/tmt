@@ -20,9 +20,9 @@ const Table = (props: TableProps) => {
     const { 
         tickets,
         isSelectable,
-        selectedItems = [],
+        selectedItems,
         centerAligned = [],
-        getSelected = null,
+        getSelected,
         sort = null 
     } = props
 
@@ -56,7 +56,7 @@ const Table = (props: TableProps) => {
                     ticketsToRender.map((item, j) => (
                         <tr className={styles.tableRow} key={v4()}>
                             {   
-                                Object.keys(item).map((key: string, i) => {
+                                Object.keys(item).map((key, i) => {
                                     let value = item[key as keyof IItem]
 
                                     if (isSelectable && key === 'checked') {

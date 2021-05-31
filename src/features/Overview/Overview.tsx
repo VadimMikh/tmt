@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { Link as RouterLink } from "react-router-dom"
 import { 
     Flex,
@@ -26,11 +26,11 @@ import MainLoader from '../Loader/MainLoader'
 import Search from '../Search/Search'
 import Table from '../Table/Table'
 import TopButtons from '../TopButtons/TopButtons'
-import { sortArray } from '../../app/utils'
+import { searchUpdate, sortArray } from '../../app/utils'
 import sltylingValues from '../../app/sltylingValues'
 import { default as AppStyles } from '../../App.module.css'
 import { IItem } from '../../interfaces/items'
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import { useAppSelector, useAppDispatch, useDebounce } from '../../app/hooks'
 
 interface ISelected {
     id: number,
@@ -39,12 +39,13 @@ interface ISelected {
 
 const Overview = () => {
 	const dispatch = useAppDispatch()
-	const tickets = useAppSelector<IItem[]>(selectTickets)
+	const tickets = useAppSelector(selectTickets)
 	const loading = useAppSelector(selectTicketsLoadingState)
 	const searchParams = useAppSelector(selectSearchParams)
     const [ selectedItems, setSelectedItems ] = useState<number[]>([])
-    const ticketInterface = tickets.length ? Object.keys(tickets[0]) : []
     const [ ticketsToDisplay, setTicketsToDisplay ] = useState<IItem[]>([])
+    const ticketInterface = useMemo(() => tickets.length ? Object.keys(tickets[0]) : [], [tickets])
+    const debouncedSearchParams = useDebounce(searchParams, 200)
 
     const getSelectedHahdler = (val: ISelected) => {
         val.add 
@@ -64,18 +65,22 @@ const Overview = () => {
         setSelectedItems([])
     }
 
+    const searchFilterHandler = useCallback(
+        () => {
+            searchUpdate(tickets, searchParams, ticketInterface, setTicketsToDisplay)
+        },
+        [searchParams, tickets, ticketInterface],
+    )
+
     useEffect(() => {
-        if (tickets.length && searchParams.searchBy) {
-            setTicketsToDisplay(tickets.filter((el: any) => {
-                return el[ticketInterface[searchParams.searchBy - 1]].toString().indexOf(searchParams.text) !== -1
-            }))
-        }
+        searchFilterHandler()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams])
+    }, [debouncedSearchParams])
 
     useEffect(() => {
         setTicketsToDisplay(tickets)
         ticketInterface && dispatch(updateTicketInterface(ticketInterface))
+        searchFilterHandler()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tickets])
     
@@ -139,7 +144,8 @@ const Overview = () => {
                         sort={sortHandler} 
                         getSelected={getSelectedHahdler}
                         isSelectable /> 
-                    : <Well>No items to show</Well> }
+                    : <Well>No items to show</Well> 
+            }
         </>
     )
 } 

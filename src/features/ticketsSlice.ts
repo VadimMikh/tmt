@@ -1,15 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { RootState } from '../app/store'
+import { AppDispatch, RootState } from '../app/store'
 import { IItem } from '../interfaces/items'
+import { ISearchParams } from '../interfaces/searchParams'
 
-interface TicketsState {
+export interface TicketsState {
 	list: IItem[]
 	ticketInterface: string[],
-	searchPapams: {
-		searchBy: number
-		text: string
-	},
+	searchPapams: ISearchParams,
 	loading: boolean
 }
 
@@ -44,10 +42,10 @@ export const ticketsSlice = createSlice({
 
 export const { getTickets, toggleTicketsLoadingState, updateSearchParams, updateTicketInterface } = ticketsSlice.actions
 
-export const getTicketList = () => async (dispatch: any) => {
+export const getTicketList = () => async (dispatch: AppDispatch) => {
 	dispatch(toggleTicketsLoadingState(true))
 	try {
-		const response = await axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10&_delay=2000')
+		const response= await axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10&_delay=2000')
 		dispatch(getTickets(response.data))
 	} catch (error) {
 		alert('Server response error')
