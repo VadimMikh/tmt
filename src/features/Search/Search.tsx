@@ -1,16 +1,25 @@
 import { useCallback, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { SearchField, Item } from '@adobe/react-spectrum'
 import { Picker } from '@react-spectrum/picker'
 import { updateSearchParams, selectTicketInterface } from '../ticketsSlice'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import sltylingValues from '../../app/sltylingValues'
 import styles from './Search.module.css'
 
-const Search = ({ defaultSelectedKey }) => {
-    const dispatch = useDispatch()
-    const ticketInterface = useSelector(selectTicketInterface)
-    const [ searchBy, setSearchBy ] = useState(defaultSelectedKey)
-    const options = ticketInterface?.length ? ticketInterface.map((el, i) => ({id: i +1, name: el})) : []
+type SearchProps = {
+    defaultSelectedKey: number
+}
+
+interface IOption {
+    id: number,
+    name: string
+}
+
+const Search = ({ defaultSelectedKey }: SearchProps) => {
+    const dispatch = useAppDispatch()
+    const ticketInterface = useAppSelector(selectTicketInterface)
+    const [ searchBy, setSearchBy ] = useState<number>(defaultSelectedKey)
+    const options = ticketInterface?.length ? ticketInterface.map((el: string, i: number) => ({id: i +1, name: el})) : []
 
     const searchMemoizedCallback = useCallback(
         text => {
@@ -29,8 +38,8 @@ const Search = ({ defaultSelectedKey }) => {
                 defaultSelectedKey={defaultSelectedKey}
                 selectedKey={searchBy}
                 items={options}
-                onSelectionChange={(id) => setSearchBy(id)}>
-                {(item) => <Item>{item.name}</Item>}
+                onSelectionChange={(id: any) => setSearchBy(id)}>
+                {(item: IOption) => <Item>{item.name}</Item>}
             </Picker>
             <SearchField placeholder="Search" onChange={searchMemoizedCallback}/>
         </>

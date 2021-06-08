@@ -12,10 +12,10 @@ import sltylingValues from '../../app/sltylingValues'
 const Cockpit = () => (
     <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 550: 2, 750: 3, 1150: 5, 1500: 7 }}>
         <Masonry className="masonry" gutter={sltylingValues.mainBottomSpacing}>
-            <MainLink link="/overview" text="Overview">
+            <MainLink link="/overview" text="Overview" disabled={false}>
                 <Money aria-label="Money" size="XXL" />
             </MainLink>
-            <MainLink link="/allocation" text="Allocation">
+            <MainLink link="/allocation" text="Allocation" disabled={false}>
                 <Hand2 aria-label="HAnd" size="XXL" />
             </MainLink>
             <MainLink link="/" text="Offers" disabled={true}>

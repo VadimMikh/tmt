@@ -1,20 +1,21 @@
-import { useSelector } from 'react-redux'
+import { Key } from 'react'
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Provider, defaultTheme, Breadcrumbs, Item, View, Flex } from '@adobe/react-spectrum'
-import styles from './App.module.css'
+import { selectBreadcrumbs } from './features/breadcrumbsSlice'
 import Cockpit from './features/Cockpit/Cockpit'
 import Overview from './features/Overview/Overview'
 import User from '@spectrum-icons/workflow/User'
-import { selectBreadcrumbs } from './features/breadcrumbsSlice'
 import Allocation from './features/Allocation/Allocation'
 import ManageEvent from './features/ManageEvent/ManageEvent'
+import styles from './App.module.css'
 
 const App = () => {
 	const breadcrumbs = useSelector(selectBreadcrumbs)
 	const history = useHistory()
 
-	const breadcrumpHandler = a => {
-		history.push(breadcrumbs[a - 1].path)
+	const breadcrumpHandler = (a: Key) => {
+		history.push(breadcrumbs[+a - 1].path)
 	}
 
 	return (
@@ -23,17 +24,16 @@ const App = () => {
 				<header className={styles.header}>
 					<Flex direction="row" gap="size-1000" justifyContent="space-between" alignItems="center" >
 						<h1 className={styles.title}>{ breadcrumbs[breadcrumbs.length - 1]?.title || '' }</h1>
-						{ breadcrumbs.length > 1 &&
+						{ breadcrumbs.length > 1 ?
 							<View overflow="hidden" width="300px">
 								<Breadcrumbs 
 									showRoot
 									UNSAFE_className={styles.breadcrumbs} 
-									onAction={breadcrumpHandler}
-									maxVisibleItems="10"
+									onAction={(a: Key) => breadcrumpHandler(a)}
 									size="S">
-									{ breadcrumbs.map(breadcrumb => <Item key={breadcrumb.id}>{breadcrumb.label}</Item>) }
+									{ breadcrumbs.map((breadcrumb: {id: number, label: string}) => <Item key={breadcrumb.id}>{breadcrumb.label}</Item>) }
 								</Breadcrumbs>
-							</View>
+							</View> : <></>
 						}
 						<Flex alignItems="center" gap="size-200">
 							<span>Username</span>
