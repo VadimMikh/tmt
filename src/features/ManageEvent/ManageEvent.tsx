@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams } from "react-router-dom"
-// import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import MainLoader from '../Loader/MainLoader'
 import { selectTickets, getTicketList } from '../ticketsSlice'
 import { IItem } from '../../interfaces/items'
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
 
 const ManageEvent = () => {
     const tickets = useAppSelector<IItem[]>(selectTickets)

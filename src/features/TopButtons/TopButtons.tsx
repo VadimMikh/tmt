@@ -2,10 +2,10 @@ import { useCallback } from 'react'
 import { ButtonGroup, Button } from '@adobe/react-spectrum'
 import { useJsonToCsv } from 'react-json-csv'
 import { getTicketList, selectTickets, selectTicketInterface } from '../ticketsSlice'
-import sltylingValues from '../../app/sltylingValues'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import sltylingValues from '../../app/sltylingValues'
 
-interface Field {
+interface IField {
     [key: string]: string;
 }
 
@@ -18,7 +18,7 @@ const TopButtons = () => {
 
     const saveCsvCallback = useCallback(
         () => {
-            let fields: Field = {}
+            let fields: IField = {}
             ticketInterface.map((el: string) => fields[el] = el)
             saveAsCsv({ data, fields, filename })
         },

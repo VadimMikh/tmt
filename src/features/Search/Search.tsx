@@ -2,15 +2,15 @@ import { useCallback, useState } from 'react'
 import { SearchField, Item } from '@adobe/react-spectrum'
 import { Picker } from '@react-spectrum/picker'
 import { updateSearchParams, selectTicketInterface } from '../ticketsSlice'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import sltylingValues from '../../app/sltylingValues'
 import styles from './Search.module.css'
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
 
 type SearchProps = {
     defaultSelectedKey: number
 }
 
-interface Option {
+interface IOption {
     id: number,
     name: string
 }
@@ -39,7 +39,7 @@ const Search = ({ defaultSelectedKey }: SearchProps) => {
                 selectedKey={searchBy}
                 items={options}
                 onSelectionChange={(id: any) => setSearchBy(id)}>
-                {(item: Option) => <Item>{item.name}</Item>}
+                {(item: IOption) => <Item>{item.name}</Item>}
             </Picker>
             <SearchField placeholder="Search" onChange={searchMemoizedCallback}/>
         </>

@@ -21,6 +21,8 @@ import {
     updateTicketInterface,
     selectSearchParams,
 } from '../ticketsSlice'
+import { IItem } from '../../interfaces/items'
+import { useAppSelector, useAppDispatch, useDebounce } from '../../app/hooks'
 import ActionBlock from '../ActionBlock/ActionBlock'
 import MainLoader from '../Loader/MainLoader'
 import Search from '../Search/Search'
@@ -29,8 +31,6 @@ import TopButtons from '../TopButtons/TopButtons'
 import { searchUpdate, sortArray } from '../../app/utils'
 import sltylingValues from '../../app/sltylingValues'
 import { default as AppStyles } from '../../App.module.css'
-import { IItem } from '../../interfaces/items'
-import { useAppSelector, useAppDispatch, useDebounce } from '../../app/hooks'
 
 interface ISelected {
     id: number,
@@ -53,7 +53,7 @@ const Overview = () => {
             : setSelectedItems((prev) => prev.filter((el) => val.id !== el))
     }
 
-    const sortHandler = (val: string, desc: boolean) => {
+    const sortHandler = (val: string, desc: boolean): void => {
         setTicketsToDisplay(sortArray(ticketsToDisplay, val, desc))
     }
 
@@ -61,7 +61,7 @@ const Overview = () => {
         close()
     }
 
-    const resetSeletion = () => {
+    const resetSeletion = (): void => {
         setSelectedItems([])
     }
 
@@ -69,7 +69,7 @@ const Overview = () => {
         () => {
             searchUpdate(tickets, searchParams, ticketInterface, setTicketsToDisplay)
         },
-        [searchParams, tickets, ticketInterface],
+        [searchParams, tickets, ticketInterface]
     )
 
     useEffect(() => {
@@ -79,8 +79,7 @@ const Overview = () => {
 
     useEffect(() => {
         setTicketsToDisplay(tickets)
-        ticketInterface && dispatch(updateTicketInterface(ticketInterface))
-        searchFilterHandler()
+        ticketInterface && dispatch(updateTicketInterface(ticketInterface)) && searchFilterHandler()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tickets])
     

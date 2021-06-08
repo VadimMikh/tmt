@@ -1,14 +1,15 @@
 import { useEffect } from 'react' 
 import { useLocation } from 'react-router-dom' 
-import { useDispatch, useSelector } from 'react-redux'
-import App from './App' 
 import { updateBreadcrumbs } from './features/breadcrumbsSlice'
+import { useAppSelector, useAppDispatch } from './app/hooks'
 import { selectTickets } from './features/ticketsSlice'
+import App from './App' 
+
 
 const Root = () => {
-    const dispatch = useDispatch()
+    const tickets = useAppSelector(selectTickets)
+    const dispatch = useAppDispatch()
     const location = useLocation()
-    const tickets = useSelector(selectTickets)
     
     /** Breadcrumbs modifications */ 
     useEffect(() => {

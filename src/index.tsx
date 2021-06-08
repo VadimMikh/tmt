@@ -1,10 +1,10 @@
 import ReactDOM from 'react-dom'
-import './index.css'
-import { store } from './app/store'
 import { Provider } from 'react-redux'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { store } from './app/store'
 import * as serviceWorker from './serviceWorker'
 import Root from './Root'
-import { BrowserRouter as Router } from 'react-router-dom'
+import './index.css'
 
 ReactDOM.render(
 	<Provider store={store}>

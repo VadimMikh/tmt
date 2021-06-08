@@ -4,14 +4,14 @@ import { AppDispatch, RootState } from '../app/store'
 import { IItem } from '../interfaces/items'
 import { ISearchParams } from '../interfaces/searchParams'
 
-export interface TicketsState {
+export interface ITicketsState {
 	list: IItem[]
 	ticketInterface: string[],
 	searchPapams: ISearchParams,
 	loading: boolean
 }
 
-const initialState: TicketsState = {
+const initialState: ITicketsState = {
 	list: [],
 	ticketInterface: [],
 	searchPapams: {

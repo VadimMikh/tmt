@@ -1,14 +1,14 @@
-import { useSelector } from 'react-redux'
+import { Key } from 'react'
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Provider, defaultTheme, Breadcrumbs, Item, View, Flex } from '@adobe/react-spectrum'
-import styles from './App.module.css'
+import { selectBreadcrumbs } from './features/breadcrumbsSlice'
 import Cockpit from './features/Cockpit/Cockpit'
 import Overview from './features/Overview/Overview'
 import User from '@spectrum-icons/workflow/User'
-import { selectBreadcrumbs } from './features/breadcrumbsSlice'
 import Allocation from './features/Allocation/Allocation'
 import ManageEvent from './features/ManageEvent/ManageEvent'
-import { Key } from 'react'
+import styles from './App.module.css'
 
 const App = () => {
 	const breadcrumbs = useSelector(selectBreadcrumbs)

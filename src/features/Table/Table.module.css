@@ -1,33 +1,42 @@
-table {
+.root {
     border-collapse: collapse;
     width: 100%;
     border: 1px solid var(--tmt-color-border-main);
 }
 
-.tableCell,
-.tableHeadCell {
+.cell,
+.headCell {
     padding: 5px 15px;
     border-left: 1px solid var(--tmt-color-border-main);
 }
 
-.tableHeadCell {
+.headCell {
     background-color: var(--tmt-color-card);
     text-align: left;
     cursor: pointer;
 }
 
-.tableCell:nth-child(1) {
+.cell:nth-child(1) {
     border-left: none;
 }
 
-.tableRow:nth-child(odd) {
+.row:nth-child(odd) {
     background-color: var(--tmt-color-bg-card);
 }
 
-.tableCellAlignCenter {
+.cellAlignCenter {
     text-align: center;
 }
 
 .sorted {
     transform: rotate(-180deg);
+}
+
+.checkbox input {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.root .checkbox {
+    padding-right: 0;
 }

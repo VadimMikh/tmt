@@ -5,7 +5,7 @@ import sltylingValues from '../../app/sltylingValues'
 
 type ActionBlockProps = {
     children: JSX.Element[] | JSX.Element,
-    resetHandler: any,
+    resetHandler: () => void,
     selectedItems: number[]
 }
 
